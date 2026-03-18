@@ -98,6 +98,88 @@ describe('orb.pgrid', function () {
   });
 });
 
+describe('orb.pgrid custom sort', function () {
+  it('applies custom sort function to row dimensions', function () {
+    var customSortConfig = {
+      dataSource: [
+        ['Charlie', 'Economy', 10],
+        ['Alice', 'Premium', 20],
+        ['Bob', 'Economy', 30],
+      ],
+      fields: [
+        {
+          name: '0',
+          caption: 'Name',
+          sort: {
+            order: 'asc',
+            customfunc: function (a, b) {
+              return a.length - b.length;
+            },
+          },
+        },
+        { name: '1', caption: 'Class' },
+        { name: '2', caption: 'Amount', dataSettings: { aggregateFunc: 'sum' } },
+      ],
+      rows: ['Name'],
+      columns: ['Class'],
+      data: ['Amount'],
+    };
+
+    var pg = new orb.pgrid(customSortConfig);
+    // Custom sort by string length: Bob(3), Alice(5), Charlie(7)
+    var rowValues = pg.rows.root.values;
+    expect(rowValues[0]).toBe('Bob');
+    expect(rowValues[1]).toBe('Alice');
+    expect(rowValues[2]).toBe('Charlie');
+  });
+
+  it('applies default sort (asc) when no custom function', function () {
+    var sortConfig = {
+      dataSource: [
+        ['Charlie', 10],
+        ['Alice', 20],
+        ['Bob', 30],
+      ],
+      fields: [
+        { name: '0', caption: 'Name', sort: { order: 'asc' } },
+        { name: '1', caption: 'Amount', dataSettings: { aggregateFunc: 'sum' } },
+      ],
+      rows: ['Name'],
+      columns: [],
+      data: ['Amount'],
+    };
+
+    var pg = new orb.pgrid(sortConfig);
+    var rowValues = pg.rows.root.values;
+    expect(rowValues[0]).toBe('Alice');
+    expect(rowValues[1]).toBe('Bob');
+    expect(rowValues[2]).toBe('Charlie');
+  });
+
+  it('applies desc sort', function () {
+    var sortConfig = {
+      dataSource: [
+        ['Alice', 10],
+        ['Charlie', 20],
+        ['Bob', 30],
+      ],
+      fields: [
+        { name: '0', caption: 'Name', sort: { order: 'desc' } },
+        { name: '1', caption: 'Amount', dataSettings: { aggregateFunc: 'sum' } },
+      ],
+      rows: ['Name'],
+      columns: [],
+      data: ['Amount'],
+    };
+
+    var pg = new orb.pgrid(sortConfig);
+    var rowValues = pg.rows.root.values;
+    expect(rowValues[0]).toBe('Charlie');
+    expect(rowValues[1]).toBe('Bob');
+    expect(rowValues[2]).toBe('Alice');
+  });
+});
+
 describe('orb module exports', function () {
   it('exports utils', function () {
     expect(orb.utils).toBeDefined();

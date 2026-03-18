@@ -111,7 +111,17 @@ module.exports = function (pgrid, type) {
         const parents =
           depth === self.dimensionsCount ? [self.root] : self.dimensionsByDepth[depth + 1];
         for (let i = 0; i < parents.length; i++) {
-          parents[i].values.sort();
+          if (field.sort.customfunc) {
+            parents[i].values.sort(field.sort.customfunc);
+          } else {
+            parents[i].values.sort(function (a, b) {
+              if (a == null) return -1;
+              if (b == null) return 1;
+              if (a < b) return -1;
+              if (a > b) return 1;
+              return 0;
+            });
+          }
           if (field.sort.order === 'desc') {
             parents[i].values.reverse();
           }
