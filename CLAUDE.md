@@ -1,4 +1,4 @@
-# orb-latest
+# orb
 
 Pivot table JavaScript library with React 18 rendering, drag-and-drop, filtering, drill-down, and Excel export.
 

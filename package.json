@@ -1,5 +1,5 @@
 {
-  "name": "orb-latest",
+  "name": "orb",
   "version": "4.0.0",
   "license": "MIT",
   "description": "Pivot table javascript library",
@@ -7,10 +7,10 @@
   "homepage": "http://orbjs.net/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/davidpelayo/orb-latest.git"
+    "url": "https://github.com/davidpelayo/orb.git"
   },
   "bugs": {
-    "url": "https://github.com/davidpelayo/orb-latest/issues"
+    "url": "https://github.com/davidpelayo/orb/issues"
   },
   "keywords": [
     "pivot table",

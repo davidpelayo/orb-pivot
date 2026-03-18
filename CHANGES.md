@@ -1,4 +1,4 @@
-## [v4.0.0](https://github.com/davidpelayo/orb-latest/compare/v3.0.0...v4.0.0)
+## [v4.0.0](https://github.com/davidpelayo/orb/compare/v3.0.0...v4.0.0)
 > Mar 18, 2026
 
 ### Breaking Changes
@@ -27,7 +27,7 @@
 - Updated README with modern usage examples, install instructions, and API docs
 - Updated CONTRIBUTING.md with current tooling
 
-## [v3.0.0](https://github.com/davidpelayo/orb-latest/compare/v2.0.4...v3.0.0)
+## [v3.0.0](https://github.com/davidpelayo/orb/compare/v2.0.4...v3.0.0)
 > Dec 2024
 
 - Complete ES6+ modernization of all source files
@@ -36,14 +36,14 @@
 - Added ESLint 9 flat config, Prettier, Husky, lint-staged
 - Multiple build outputs: UMD, ESM, CSS with sourcemaps
 
-## [v2.0.4](https://github.com/davidpelayo/orb-latest/compare/v2.0.3...v2.0.4)
+## [v2.0.4](https://github.com/davidpelayo/orb/compare/v2.0.3...v2.0.4)
 > Jun 08, 2017
 
 - Added `CHANGES.md`.
 - Added `CONTRIBUTING.md`.
 - Added `ISSUE_TEMPLATE.md`.
 
-## [v2.0.3](https://github.com/davidpelayo/orb-latest/compare/1c4438fd428f6b0cf2b421cfd5ed0cce436ab580...v2.0.3)
+## [v2.0.3](https://github.com/davidpelayo/orb/compare/1c4438fd428f6b0cf2b421cfd5ed0cce436ab580...v2.0.3)
 > Jun 07, 2017
 
 - Upgraded dependencies.
