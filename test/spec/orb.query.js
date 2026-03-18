@@ -1,5 +1,3 @@
-require('./helpers/orbHelpers');
-
 var testdata = require('./testdata');
 var expected_amount = testdata.expected.amount;
 var expected_quantity = testdata.expected.quantity;

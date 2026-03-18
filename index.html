@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>orb-latest Demo</title>
+  <link rel="stylesheet" href="/dist/orb.css" />
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 2rem;
+      background: #f5f5f5;
+    }
+    h1 { color: #333; }
+    #pivot-container {
+      margin-top: 1rem;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>orb-latest Pivot Table Demo</h1>
+  <p>Interactive pivot grid library. Drag fields, click to sort, double-click cells to drill down.</p>
+  <div id="pivot-container"></div>
+
+  <script src="/dist/orb.js"></script>
+  <script>
+    var config = {
+      dataSource: [
+        ['US', 'New York', 'Laptops', 'Acme Corp', 120, 89999.99],
+        ['US', 'New York', 'Phones', 'Acme Corp', 200, 159800.00],
+        ['US', 'California', 'Laptops', 'Beta Inc', 80, 63999.99],
+        ['US', 'California', 'Phones', 'Beta Inc', 150, 112350.00],
+        ['US', 'California', 'Tablets', 'Acme Corp', 60, 29999.99],
+        ['UK', 'London', 'Laptops', 'Acme Corp', 90, 67499.99],
+        ['UK', 'London', 'Phones', 'Gamma Ltd', 180, 143820.00],
+        ['UK', 'Manchester', 'Tablets', 'Beta Inc', 45, 22499.99],
+        ['UK', 'Manchester', 'Laptops', 'Gamma Ltd', 55, 41249.99],
+        ['DE', 'Berlin', 'Phones', 'Acme Corp', 160, 127840.00],
+        ['DE', 'Berlin', 'Tablets', 'Gamma Ltd', 75, 37499.99],
+        ['DE', 'Munich', 'Laptops', 'Beta Inc', 95, 71249.99],
+        ['DE', 'Munich', 'Phones', 'Beta Inc', 110, 87890.00],
+        ['FR', 'Paris', 'Laptops', 'Acme Corp', 100, 74999.99],
+        ['FR', 'Paris', 'Phones', 'Gamma Ltd', 140, 111720.00],
+        ['FR', 'Lyon', 'Tablets', 'Acme Corp', 50, 24999.99],
+      ],
+      dataHeadersLocation: 'columns',
+      width: 900,
+      grandTotal: {
+        rowsvisible: true,
+        columnsvisible: true
+      },
+      subTotal: {
+        visible: true
+      },
+      fields: [
+        { name: '0', caption: 'Country' },
+        { name: '1', caption: 'City' },
+        { name: '2', caption: 'Product' },
+        { name: '3', caption: 'Brand' },
+        { name: '4', caption: 'Quantity' },
+        {
+          name: '5',
+          caption: 'Revenue',
+          dataSettings: {
+            aggregateFunc: 'sum',
+            formatFunc: function(val) {
+              return '$' + Number(val).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+          }
+        }
+      ],
+      rows: ['Country', 'City'],
+      columns: ['Product'],
+      data: ['Quantity', 'Revenue']
+    };
+
+    var pivotWidget = new orb.pgridwidget(config);
+    pivotWidget.render(document.getElementById('pivot-container'));
+  </script>
+</body>
+</html>

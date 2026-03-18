@@ -4,7 +4,9 @@
     "<rootDir>/test/setup.js"
   ],
   "testMatch": [
-    "**/test/spec/**/*.js"
+    "**/test/spec/**/*.test.js",
+    "**/test/spec/**/*.spec.js",
+    "**/test/spec/**/orb.query.js"
   ],
   "collectCoverageFrom": [
     "src/**/*.{js,jsx}",

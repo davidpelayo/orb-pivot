@@ -1,4 +1,4 @@
-/** @jsx React.DOM */
+/* orb react components */
 
 /* global module, require, React, window */
 /*jshint node: true*/
@@ -7,9 +7,8 @@
 
 var React = require('react');
 var ReactDOM = require('react-dom');
+var createReactClass = require('create-react-class');
 
-const react = typeof window === 'undefined' ? require('react') : window.React;
-const reactDOM = typeof window === 'undefined' ? require('react-dom') : window.ReactDOM;
 const utils = require('../orb.utils');
 const axe = require('../orb.axe');
 const uiheaders = require('../orb.ui.header');
@@ -19,19 +18,10 @@ const reactUtils = require('./orb.react.utils');
 const extraCol = 0;
 const comps = module.exports;
 
-/** @jsx React.DOM */
-
-/* global module, require, React */
-
-('use strict');
-
-var React = require('react');
-var ReactDOM = require('react-dom');
-
 let pivotId = 1;
 const themeChangeCallbacks = {};
 
-module.exports.PivotTable = React.createClass({
+module.exports.PivotTable = createReactClass({
   displayName: 'PivotTable',
   id: pivotId++,
   pgrid: null,
@@ -703,7 +693,7 @@ function clearTableWidths(tbl) {
   }
 }
 
-/** @jsx React.DOM */
+/* orb react components */
 
 /* global module, require, React */
 
@@ -712,7 +702,7 @@ function clearTableWidths(tbl) {
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-module.exports.PivotRow = React.createClass({
+module.exports.PivotRow = createReactClass({
   displayName: 'PivotRow',
   render: function () {
     const self = this;
@@ -784,7 +774,7 @@ module.exports.PivotRow = React.createClass({
   },
 });
 
-/** @jsx React.DOM */
+/* orb react components */
 
 /* global module, require, React */
 /*jshint eqnull: true*/
@@ -797,7 +787,7 @@ var ReactDOM = require('react-dom');
 let _paddingLeft = null;
 let _borderLeft = null;
 
-module.exports.PivotCell = React.createClass({
+module.exports.PivotCell = createReactClass({
   displayName: 'PivotCell',
   expand: function () {
     this.props.pivotTableComp.expandRow(this.props.cell);
@@ -1251,7 +1241,7 @@ const dragManager = (module.exports.DragManager = (function () {
   };
 })());
 
-/** @jsx React.DOM */
+/* orb react components */
 
 /* global module, require, react */
 /*jshint eqnull: true*/
@@ -1261,7 +1251,7 @@ const dragManager = (module.exports.DragManager = (function () {
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-module.exports.DropIndicator = React.createClass({
+module.exports.DropIndicator = createReactClass({
   displayName: 'DropIndicator',
   getInitialState: function () {
     dragManager.registerIndicator(
@@ -1325,7 +1315,7 @@ module.exports.DropIndicator = React.createClass({
   },
 });
 
-/** @jsx React.DOM */
+/* orb react components */
 
 /* global module, require, react */
 /*jshint eqnull: true*/
@@ -1337,7 +1327,7 @@ var ReactDOM = require('react-dom');
 
 let dtid = 0;
 
-module.exports.DropTarget = React.createClass({
+module.exports.DropTarget = createReactClass({
   displayName: 'DropTarget',
   getInitialState: function () {
     this.dtid = ++dtid;
@@ -1445,7 +1435,7 @@ module.exports.DropTarget = React.createClass({
   },
 });
 
-/** @jsx React.DOM */
+/* orb react components */
 
 /* global module, require, react */
 /*jshint eqnull: true*/
@@ -1457,7 +1447,7 @@ var ReactDOM = require('react-dom');
 
 let pbid = 0;
 
-module.exports.PivotButton = React.createClass({
+module.exports.PivotButton = createReactClass({
   displayName: 'PivotButton',
   getInitialState: function () {
     this.pbid = ++pbid;
@@ -1484,8 +1474,7 @@ module.exports.PivotButton = React.createClass({
     const filterButtonPos = reactUtils.getOffset(filterButton);
     const filterContainer = document.createElement('div');
 
-    const filterPanelFactory = React.createFactory(comps.FilterPanel);
-    const filterPanel = filterPanelFactory({
+    const filterPanel = React.createElement(comps.FilterPanel, {
       field: this.props.field.name,
       pivotTableComp: this.props.pivotTableComp,
     });
@@ -1684,7 +1673,7 @@ module.exports.PivotButton = React.createClass({
   },
 });
 
-/** @jsx React.DOM */
+/* orb react components */
 
 /* global module, require, React */
 
@@ -1693,7 +1682,7 @@ module.exports.PivotButton = React.createClass({
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-module.exports.PivotTableUpperButtons = React.createClass({
+module.exports.PivotTableUpperButtons = createReactClass({
   displayName: 'PivotTableUpperButtons',
   render: function () {
     const self = this;
@@ -1780,7 +1769,7 @@ module.exports.PivotTableUpperButtons = React.createClass({
   },
 });
 
-/** @jsx React.DOM */
+/* orb react components */
 
 /* global module, require, React */
 
@@ -1789,7 +1778,7 @@ module.exports.PivotTableUpperButtons = React.createClass({
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-module.exports.PivotTableColumnButtons = React.createClass({
+module.exports.PivotTableColumnButtons = createReactClass({
   displayName: 'PivotTableColumnButtons',
   render: function () {
     const self = this;
@@ -1815,7 +1804,7 @@ module.exports.PivotTableColumnButtons = React.createClass({
   },
 });
 
-/** @jsx React.DOM */
+/* orb react components */
 
 /* global module, require, React */
 
@@ -1824,7 +1813,7 @@ module.exports.PivotTableColumnButtons = React.createClass({
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-module.exports.PivotTableRowButtons = React.createClass({
+module.exports.PivotTableRowButtons = createReactClass({
   displayName: 'PivotTableRowButtons',
   render: function () {
     const self = this;
@@ -1850,7 +1839,7 @@ module.exports.PivotTableRowButtons = React.createClass({
   },
 });
 
-/** @jsx React.DOM */
+/* orb react components */
 
 /* global module, require, React */
 
@@ -1859,7 +1848,7 @@ module.exports.PivotTableRowButtons = React.createClass({
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-module.exports.PivotTableColumnHeaders = React.createClass({
+module.exports.PivotTableColumnHeaders = createReactClass({
   displayName: 'PivotTableColumnHeaders',
   render: function () {
     const self = this;
@@ -1901,7 +1890,7 @@ module.exports.PivotTableColumnHeaders = React.createClass({
   },
 });
 
-/** @jsx React.DOM */
+/* orb react components */
 
 /* global module, require, React */
 
@@ -1910,7 +1899,7 @@ module.exports.PivotTableColumnHeaders = React.createClass({
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-module.exports.PivotTableRowHeaders = React.createClass({
+module.exports.PivotTableRowHeaders = createReactClass({
   displayName: 'PivotTableRowHeaders',
   setColGroup: function (widths) {
     const node = ReactDOM.findDOMNode(this);
@@ -1967,7 +1956,7 @@ module.exports.PivotTableRowHeaders = React.createClass({
   },
 });
 
-/** @jsx React.DOM */
+/* orb react components */
 
 /* global module, require, React */
 
@@ -1976,7 +1965,7 @@ module.exports.PivotTableRowHeaders = React.createClass({
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-module.exports.PivotTableDataCells = React.createClass({
+module.exports.PivotTableDataCells = createReactClass({
   displayName: 'PivotTableDataCells',
   render: function () {
     const self = this;
@@ -2009,7 +1998,7 @@ module.exports.PivotTableDataCells = React.createClass({
   },
 });
 
-/** @jsx React.DOM */
+/* orb react components */
 
 /* global module, require, React, react, reactUtils, document */
 /*jshint eqnull: true*/
@@ -2201,7 +2190,7 @@ function ScrollEvent(scrollBarComp) {
   };
 }
 
-module.exports.HorizontalScrollBar = React.createClass({
+module.exports.HorizontalScrollBar = createReactClass({
   displayName: 'HorizontalScrollBar',
   mixins: [scrollBarMixin],
   posProp: 'x',
@@ -2211,7 +2200,7 @@ module.exports.HorizontalScrollBar = React.createClass({
   cssClass: 'orb-h-scrollbar',
 });
 
-module.exports.VerticalScrollBar = React.createClass({
+module.exports.VerticalScrollBar = createReactClass({
   displayName: 'VerticalScrollBar',
   mixins: [scrollBarMixin],
   posProp: 'y',
@@ -2221,7 +2210,7 @@ module.exports.VerticalScrollBar = React.createClass({
   cssClass: 'orb-v-scrollbar',
 });
 
-/** @jsx React.DOM */
+/* orb react components */
 
 /* global module, react, React */
 /*jshint eqnull: true*/
@@ -2231,7 +2220,7 @@ module.exports.VerticalScrollBar = React.createClass({
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-module.exports.FilterPanel = React.createClass({
+module.exports.FilterPanel = createReactClass({
   displayName: 'FilterPanel',
   pgridwidget: null,
   values: null,
@@ -2907,7 +2896,7 @@ function FilterManager(reactComp, initialFilterObject) {
   };
 }
 
-/** @jsx React.DOM */
+/* orb react components */
 
 /* global module, react, React */
 /*jshint eqnull: true*/
@@ -2917,7 +2906,7 @@ function FilterManager(reactComp, initialFilterObject) {
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-module.exports.Dropdown = React.createClass({
+module.exports.Dropdown = createReactClass({
   displayName: 'Dropdown',
   openOrClose: function (e) {
     const valueNode = ReactDOM.findDOMNode(this.refs.valueElement);
@@ -3012,7 +3001,7 @@ module.exports.Dropdown = React.createClass({
   },
 });
 
-/** @jsx React.DOM */
+/* orb react components */
 
 /* global module, require, React */
 
@@ -3021,7 +3010,7 @@ module.exports.Dropdown = React.createClass({
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-module.exports.Grid = React.createClass({
+module.exports.Grid = createReactClass({
   displayName: 'Grid',
   render: function () {
     const data = this.props.data;
@@ -3106,7 +3095,7 @@ module.exports.Grid = React.createClass({
   },
 });
 
-/** @jsx React.DOM */
+/* orb react components */
 
 /* global module, require, React */
 
@@ -3122,16 +3111,15 @@ function createOverlay() {
   return overlayElement;
 }
 
-var Dialog = (module.exports.Dialog = React.createClass({
+var Dialog = (module.exports.Dialog = createReactClass({
   displayName: 'Dialog',
   statics: {
     create: function () {
-      const dialogFactory = React.createFactory(Dialog);
       const overlay = createOverlay();
 
       return {
         show: function (props) {
-          ReactDOM.render(dialogFactory(props), overlay);
+          ReactDOM.render(React.createElement(Dialog, props), overlay);
         },
       };
     },
@@ -3214,7 +3202,7 @@ var Dialog = (module.exports.Dialog = React.createClass({
   },
 }));
 
-/** @jsx React.DOM */
+/* orb react components */
 
 /* global module, require, react */
 /*jshint node: true, eqnull: true*/
@@ -3224,7 +3212,7 @@ var Dialog = (module.exports.Dialog = React.createClass({
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-module.exports.Toolbar = React.createClass({
+module.exports.Toolbar = createReactClass({
   displayName: 'Toolbar',
   _toInit: [],
   componentDidMount: function () {

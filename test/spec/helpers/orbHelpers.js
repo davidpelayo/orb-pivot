@@ -1,13 +1,9 @@
-beforeEach(function () {
-	jasmine.addMatchers({
-		toBeNumeric: function () {
-			return {
-				compare: function (actual, expected) {
-					return {
-						pass: actual !== undefined && !isNaN(actual) && typeof(actual) === 'number'
-					}
-				}
-			};
-		}
-	})
+expect.extend({
+  toBeNumeric(received) {
+    const pass = received !== undefined && !isNaN(received) && typeof received === 'number';
+    return {
+      message: () => `expected ${received} ${pass ? 'not ' : ''}to be numeric`,
+      pass,
+    };
+  },
 });

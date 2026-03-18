@@ -7,6 +7,7 @@
 
 /* global module, require, React, window */
 /*jshint eqnull: true*/
+const React = require('react');
 const ReactDOM = require('react-dom');
 const axe = require('./orb.axe');
 const pgrid = require('./orb.pgrid');
@@ -160,8 +161,7 @@ module.exports = function (config) {
   this.render = function (element) {
     renderElement = element;
     if (renderElement) {
-      const pivotTableFactory = React.createFactory(OrbReactComps.PivotTable);
-      const pivottable = pivotTableFactory({
+      const pivottable = React.createElement(OrbReactComps.PivotTable, {
         pgridwidget: self,
       });
 
