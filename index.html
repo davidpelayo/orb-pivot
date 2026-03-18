@@ -387,6 +387,142 @@
       max-width: 1120px; margin: 2rem auto 0; padding-top: 2rem;
       border-top: 1px solid rgba(255,255,255,0.06); text-align: center; font-size: 0.8rem;
     }
+
+    /* ---- Pivot table theme (blue) ---- */
+    #pivot-container .orb-container { font-family: var(--sans); font-size: 13px; }
+    #pivot-container .orb { color: #1e293b; }
+
+    /* Field buttons (axis labels) */
+    #pivot-container .orb .fld-btn {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: #fff; font-weight: 600; border-radius: 6px;
+      padding: 4px 8px; font-size: 12px;
+      box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
+      transition: all 0.15s;
+    }
+    #pivot-container .orb .fld-btn:hover {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+    }
+
+    /* Column headers */
+    #pivot-container .orb .header {
+      background: #eff6ff; color: #1e40af; font-weight: 600;
+    }
+    #pivot-container .orb .header-col {
+      border-left: 1px solid #bfdbfe;
+    }
+    #pivot-container .orb .header-row {
+      border-top: 1px solid #bfdbfe;
+    }
+
+    /* Sub-total headers */
+    #pivot-container .orb .header-st {
+      background: #dbeafe; color: #1e3a8a; font-weight: 700;
+    }
+
+    /* Grand-total headers */
+    #pivot-container .orb .header-gt {
+      background: #bfdbfe; color: #1e3a8a; font-weight: 700;
+    }
+
+    /* Data cells */
+    #pivot-container .orb .cell {
+      background: #ffffff; color: #334155;
+      border-top: 1px solid #e2e8f0;
+      border-left: 1px solid #f1f5f9;
+      transition: background 0.1s;
+    }
+    #pivot-container .orb .cell:hover {
+      background: #f8fafc;
+    }
+
+    /* Sub-total cells */
+    #pivot-container .orb .cell-st {
+      background: #f0f7ff; color: #1e40af; font-weight: 600;
+      border-top: 1px solid #bfdbfe;
+    }
+
+    /* Grand-total cells */
+    #pivot-container .orb .cell-gt {
+      background: #dbeafe; color: #1e3a8a; font-weight: 700;
+      border-top: 1px solid #93c5fd;
+    }
+
+    /* Container borders */
+    #pivot-container .orb .columns-cntr {
+      border: 1px solid #bfdbfe; border-bottom: none;
+      border-radius: 8px 8px 0 0; overflow: hidden;
+    }
+    #pivot-container .orb .rows-cntr {
+      border: 1px solid #bfdbfe; border-right: none;
+      border-radius: 8px 0 0 8px; overflow: hidden;
+    }
+    #pivot-container .orb .data-cntr {
+      border: 1px solid #bfdbfe;
+      border-radius: 0 0 8px 0; overflow: hidden;
+    }
+
+    /* Axis caption labels */
+    #pivot-container .orb .flds-grp-cap div {
+      color: #64748b; font-weight: 700; font-size: 11px;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+
+    /* Upper area (toolbar/buttons zone) */
+    #pivot-container .orb .av-flds {
+      border-bottom: 1px solid #e2e8f0 !important;
+    }
+
+    /* Drop targets */
+    #pivot-container .orb .drp-trgt-over {
+      background: #eff6ff;
+    }
+    #pivot-container .orb .drp-trgt-empty {
+      border: 1px dashed #93c5fd;
+    }
+    #pivot-container .orb .drp-indic-over {
+      background: #93c5fd;
+    }
+
+    /* Toolbar */
+    #pivot-container .orb-toolbar {
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;
+    }
+
+    /* Scrollbar thumbs */
+    #pivot-container .orb .orb-scrollthumb {
+      background: #cbd5e1; border: 1px solid #94a3b8; border-radius: 4px;
+    }
+    #pivot-container .orb .orb-scrollthumb-hover {
+      background: #94a3b8;
+    }
+
+    /* Filter panel */
+    #pivot-container .fltr-cntnr {
+      border: 1px solid #bfdbfe; border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+
+    /* Inner table spacing */
+    #pivot-container .orb .inner-table > tbody > tr > td {
+      padding: 10px 12px;
+    }
+
+    /* Cell data alignment */
+    #pivot-container .orb .cell-data {
+      font-variant-numeric: tabular-nums;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    /* Alternating row shading for data cells */
+    #pivot-container .orb .cell-leftmost {
+      border-left: none !important;
+    }
+    #pivot-container .orb .cell-topmost {
+      border-top: none !important;
+    }
   </style>
 </head>
 <body>
