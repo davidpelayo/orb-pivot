@@ -1,7 +1,5 @@
 # orb-latest
 
-[<img align="right" src="https://nodei.co/npm/orb-latest.png?compact=true"/>](https://www.npmjs.com/package/orb-latest)
-
 Pivot grid JavaScript library with React 18 rendering.
 
 **Latest version:** 4.0.0
