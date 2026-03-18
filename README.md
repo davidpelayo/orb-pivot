@@ -1,15 +1,15 @@
-# orb
+# orb-pivot
 
 Pivot grid JavaScript library with React 18 rendering.
 
 **Latest version:** 4.0.0
 
-[![CI](https://github.com/davidpelayo/orb/actions/workflows/ci.yml/badge.svg)](https://github.com/davidpelayo/orb/actions/workflows/ci.yml)
+[![CI](https://github.com/davidpelayo/orb-pivot/actions/workflows/ci.yml/badge.svg)](https://github.com/davidpelayo/orb-pivot/actions/workflows/ci.yml)
 
 ## Install
 
 ```bash
-npm install orb react react-dom
+npm install orb-pivot react react-dom
 ```
 
 ## Quick Start
@@ -17,10 +17,10 @@ npm install orb react react-dom
 ### Browser (UMD)
 
 ```html
-<link rel="stylesheet" href="node_modules/orb/dist/orb.css" />
+<link rel="stylesheet" href="node_modules/orb-pivot/dist/orb.css" />
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="node_modules/orb/dist/orb.min.js"></script>
+<script src="node_modules/orb-pivot/dist/orb.min.js"></script>
 
 <div id="pivot-container"></div>
 
@@ -49,8 +49,8 @@ npm install orb react react-dom
 ### ES Module / Bundler
 
 ```javascript
-import orb from 'orb';
-import 'orb/dist/orb.css';
+import orb from 'orb-pivot';
+import 'orb-pivot/dist/orb.css';
 
 const pgrid = new orb.pgrid(config);
 const query = pgrid.query();
@@ -87,7 +87,7 @@ console.log(result.Revenue); // => 249799.99
 Query aggregation results with a fluent API:
 
 ```javascript
-const orb = require('orb');
+const orb = require('orb-pivot');
 const pgrid = new orb.pgrid(config);
 
 // Query with field filters
@@ -182,7 +182,7 @@ npm run format       # Format (Prettier)
 
 ## License
 
-[MIT](https://github.com/davidpelayo/orb/blob/master/LICENSE)
+[MIT](https://github.com/davidpelayo/orb-pivot/blob/master/LICENSE)
 
 ## Credits
 
