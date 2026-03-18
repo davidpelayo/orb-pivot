@@ -3,32 +3,1059 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>orb-pivot Demo</title>
-  <link rel="stylesheet" href="/dist/orb.css" />
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <meta name="description" content="orb-pivot — Interactive pivot grid JavaScript library with drag-and-drop, sorting, filtering, drill-down, and fast React 18 rendering." />
+  <title>orb-pivot — Pivot Grid JavaScript Library</title>
+  <link rel="stylesheet" href="dist/orb.css" />
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      margin: 2rem;
-      background: #f5f5f5;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: #f7f8fa;
+      color: #333;
+      line-height: 1.6;
     }
-    h1 { color: #333; }
-    #pivot-container {
+
+    /* ---- Navigation ---- */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(26, 26, 46, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    nav .logo {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #fff;
+      text-decoration: none;
+    }
+    nav .logo span { color: #e94560; }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+    nav ul a {
+      color: #ccc;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    nav ul a:hover { color: #e94560; }
+
+    /* ---- Hero ---- */
+    .hero {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: #fff;
+      padding: 8rem 2rem 4rem;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 3.5rem;
+      margin: 0 0 0.75rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+    .hero h1 span { color: #e94560; }
+    .hero .tagline {
+      font-size: 1.25rem;
+      color: #b0b0c8;
+      margin: 0 auto 0.75rem;
+      max-width: 650px;
+    }
+    .hero .version-badge {
+      display: inline-block;
+      background: rgba(233, 69, 96, 0.2);
+      color: #e94560;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.65rem 1.6rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .btn-primary { background: #e94560; color: #fff; }
+    .btn-outline { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.3); }
+    .btn-outline:hover { border-color: #e94560; color: #e94560; }
+    .btn-dark { background: #1a1a2e; color: #fff; }
+    .btn-dark:hover { background: #0f3460; }
+
+    /* Install snippet */
+    .install-snippet {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
       margin-top: 1rem;
+    }
+    .install-snippet code {
+      color: #e94560;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 1rem;
+      user-select: all;
+    }
+    .install-snippet .copy-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #aaa;
+      cursor: pointer;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+    .install-snippet .copy-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+
+    /* ---- Container ---- */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+    section { padding: 4rem 0; }
+    section h2 {
+      font-size: 2rem;
+      margin: 0 0 0.5rem;
+      color: #1a1a2e;
+      font-weight: 700;
+    }
+    section .section-subtitle {
+      color: #666;
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+    }
+
+    /* ---- Features ---- */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .feature-card {
       background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .feature-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); transform: translateY(-2px); }
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+    .icon-blue { background: #e8f0fe; color: #1a73e8; }
+    .icon-red { background: #fce8ec; color: #e94560; }
+    .icon-green { background: #e6f4ea; color: #34a853; }
+    .icon-purple { background: #f3e8fd; color: #9334e6; }
+    .icon-orange { background: #fef3e0; color: #e8710a; }
+    .icon-teal { background: #e0f7fa; color: #00897b; }
+    .feature-card h3 {
+      margin: 0 0 0.5rem;
+      font-size: 1.15rem;
+      color: #1a1a2e;
+    }
+    .feature-card p {
+      margin: 0;
+      color: #555;
+      font-size: 0.95rem;
+    }
+
+    /* ---- Demo ---- */
+    .demo-section { background: #eef1f5; }
+    #pivot-container {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      overflow-x: auto;
+    }
+    .demo-tips {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .demo-tip {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: #555;
+    }
+    .demo-tip-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: #0f3460;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    /* ---- Code Examples ---- */
+    .code-examples-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .code-example {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .code-example-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #eee;
+    }
+    .code-example-header h3 {
+      margin: 0;
+      font-size: 1.05rem;
+      color: #1a1a2e;
+    }
+    .code-example-header .tag {
+      background: #f0f0f0;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      color: #666;
+      font-weight: 600;
+    }
+    .code-example-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 0;
+    }
+    @media (max-width: 768px) {
+      .code-example-body { grid-template-columns: 1fr; }
+    }
+    .code-panel {
+      background: #1e1e3f;
+      color: #e0e0e0;
+      padding: 1.5rem;
+      overflow-x: auto;
+    }
+    .code-panel pre {
+      margin: 0;
+      font-size: 0.85rem;
+      line-height: 1.7;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      white-space: pre;
+    }
+    .desc-panel {
+      padding: 1.5rem;
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.7;
+    }
+    .desc-panel h4 {
+      margin: 0 0 0.75rem;
+      color: #1a1a2e;
+      font-size: 1rem;
+    }
+    .desc-panel ul {
+      margin: 0.5rem 0;
+      padding-left: 1.25rem;
+    }
+    .desc-panel li { margin-bottom: 0.4rem; }
+    .desc-panel code {
+      background: #f0f0f0;
+      padding: 0.1rem 0.35rem;
+      border-radius: 3px;
+      font-size: 0.85rem;
+    }
+
+    /* Syntax highlight */
+    .kw { color: #c792ea; }
+    .str { color: #c3e88d; }
+    .fn { color: #82aaff; }
+    .cm { color: #676e95; }
+    .num { color: #f78c6c; }
+    .tag-hl { color: #f07178; }
+
+    /* ---- Aggregation ---- */
+    .agg-section { background: #eef1f5; }
+    .agg-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .agg-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 1.25rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      text-align: center;
+    }
+    .agg-card code {
+      display: block;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0f3460;
+      margin-bottom: 0.35rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+    .agg-card span {
+      font-size: 0.85rem;
+      color: #888;
+    }
+
+    /* ---- Theming ---- */
+    .themes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 1rem;
+    }
+    .theme-swatch {
+      border-radius: 10px;
+      padding: 1.25rem;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+    .theme-swatch:hover { transform: scale(1.05); }
+    .theme-swatch span { display: block; margin-top: 0.5rem; font-size: 0.8rem; font-weight: 400; opacity: 0.8; }
+
+    /* ---- Query API ---- */
+    .api-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+    .api-step {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.75rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      position: relative;
+    }
+    .api-step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #e94560;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    .api-step h4 {
+      margin: 0 0 0.5rem;
+      color: #1a1a2e;
+      font-size: 1rem;
+    }
+    .api-step pre {
+      background: #1e1e3f;
+      color: #e0e0e0;
+      padding: 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      overflow-x: auto;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+    .api-step p {
+      color: #666;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    /* ---- Contributing ---- */
+    .contrib-section { background: #eef1f5; }
+    .contrib-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .contrib-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .contrib-card h3 {
+      margin: 0 0 1rem;
+      color: #1a1a2e;
+      font-size: 1.1rem;
+    }
+    .contrib-card pre {
+      background: #1e1e3f;
+      color: #e0e0e0;
       padding: 1rem;
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      font-size: 0.85rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+    .contrib-card p, .contrib-card li {
+      color: #555;
+      font-size: 0.95rem;
+    }
+    .contrib-card ul {
+      padding-left: 1.25rem;
+      margin: 0.5rem 0 0;
+    }
+    .contrib-card li { margin-bottom: 0.4rem; }
+
+    /* ---- Compatibility ---- */
+    .compat-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .compat-table th {
+      background: #0f3460;
+      color: #fff;
+      padding: 0.85rem 1.25rem;
+      text-align: left;
+      font-weight: 600;
+    }
+    .compat-table td {
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .compat-table tr:last-child td { border-bottom: none; }
+    .compat-table .check { color: #34a853; font-weight: bold; }
+    .compat-table .star { color: #e94560; font-weight: bold; }
+
+    /* ---- CTA ---- */
+    .cta-section {
+      background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+      color: #fff;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+    .cta-section h2 { color: #fff; margin-bottom: 1rem; }
+    .cta-section p { color: #b0b0c8; font-size: 1.1rem; margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+    .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* ---- Footer ---- */
+    footer {
+      background: #111;
+      color: #888;
+      padding: 3rem 2rem;
+    }
+    .footer-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 2rem;
+    }
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    footer h4 { color: #ccc; font-size: 0.95rem; margin-bottom: 1rem; }
+    footer p { font-size: 0.85rem; line-height: 1.6; }
+    footer ul { list-style: none; }
+    footer ul li { margin-bottom: 0.5rem; }
+    footer a { color: #888; text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+    footer a:hover { color: #e94560; }
+    .footer-bottom {
+      max-width: 1100px;
+      margin: 2rem auto 0;
+      padding-top: 2rem;
+      border-top: 1px solid #222;
+      text-align: center;
+      font-size: 0.85rem;
     }
   </style>
 </head>
 <body>
-  <h1>orb Pivot Table Demo</h1>
-  <p>Interactive pivot grid library. Drag fields, click to sort, double-click cells to drill down.</p>
-  <div id="pivot-container"></div>
 
-  <script src="/dist/orb.js"></script>
+  <!-- Navigation -->
+  <nav>
+    <a href="#" class="logo">orb-<span>pivot</span></a>
+    <ul>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#demo">Demo</a></li>
+      <li><a href="#examples">Examples</a></li>
+      <li><a href="#api">Query API</a></li>
+      <li><a href="#contributing">Contributing</a></li>
+      <li><a href="https://github.com/davidpelayo/orb-pivot">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="version-badge">v4.0.0</div>
+    <h1>orb-<span>pivot</span></h1>
+    <p class="tagline">Interactive pivot grid JavaScript library with drag-and-drop, sorting, filtering, drill-down, and fast React 18 rendering.</p>
+    <div class="hero-actions">
+      <a href="#demo" class="btn btn-primary">Live Demo</a>
+      <a href="#examples" class="btn btn-outline">See Examples</a>
+      <a href="https://github.com/davidpelayo/orb-pivot" class="btn btn-outline">View on GitHub</a>
+    </div>
+    <div class="install-snippet">
+      <code id="install-cmd">npm install orb-pivot react react-dom</code>
+      <button class="copy-btn" onclick="navigator.clipboard.writeText('npm install orb-pivot react react-dom');this.textContent='Copied!'">Copy</button>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section id="features">
+    <div class="container">
+      <h2>Features</h2>
+      <p class="section-subtitle">Everything you need to build powerful, interactive pivot tables in the browser.</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon icon-blue">&#9776;</div>
+          <h3>Drag and Drop</h3>
+          <p>Move fields between row, column, data, and filter axes by dragging. Reconfigure your pivot layout interactively without writing code.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-red">&#8645;</div>
+          <h3>Sort and Filter</h3>
+          <p>Click any header to sort ascending or descending. Apply visual filters with expression operators: equals, contains, greater than, regex, and more.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-green">&#128269;</div>
+          <h3>Drill Down</h3>
+          <p>Double-click any aggregated cell to see the underlying detail rows. Explore the raw data behind every number in your pivot table.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-purple">&#931;</div>
+          <h3>10 Aggregation Functions</h3>
+          <p>Sum, average, count, min, max, product, standard deviation (sample and population), variance (sample and population). Plus custom functions.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-orange">&#8721;</div>
+          <h3>Grand and Sub Totals</h3>
+          <p>Show totals for rows and columns independently. Expand and collapse sub total groups for hierarchical data navigation.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-teal">&#127912;</div>
+          <h3>Themes and Export</h3>
+          <p>8 built-in color themes (red, blue, green, orange, flower, gray, black, white), Bootstrap support, and one-click Excel export.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-blue">&#9889;</div>
+          <h3>React 18 Rendering</h3>
+          <p>Powered by React 18 for fast, efficient DOM updates. Works with both UMD (browser) and ES module (bundler) setups.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-red">&#128202;</div>
+          <h3>Multiple Data Fields</h3>
+          <p>Display multiple measures simultaneously. Place data headers on rows or columns to suit your analysis layout.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-green">&#128736;</div>
+          <h3>Fluent Query API</h3>
+          <p>Query aggregated data programmatically with a fluent, chainable API. Works standalone without rendering any UI.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Demo -->
+  <section id="demo" class="demo-section">
+    <div class="container">
+      <h2>Live Demo</h2>
+      <p class="section-subtitle">This is a live, interactive pivot table rendered in your browser. Try interacting with it:</p>
+      <div class="demo-tips">
+        <div class="demo-tip">
+          <div class="demo-tip-icon">D</div>
+          <span>Drag field buttons to rearrange axes</span>
+        </div>
+        <div class="demo-tip">
+          <div class="demo-tip-icon">S</div>
+          <span>Click headers to sort</span>
+        </div>
+        <div class="demo-tip">
+          <div class="demo-tip-icon">F</div>
+          <span>Use toolbar filters</span>
+        </div>
+        <div class="demo-tip">
+          <div class="demo-tip-icon">2x</div>
+          <span>Double-click cells to drill down</span>
+        </div>
+      </div>
+      <div id="pivot-container"></div>
+    </div>
+  </section>
+
+  <!-- Code Examples -->
+  <section id="examples">
+    <div class="container">
+      <h2>Code Examples</h2>
+      <p class="section-subtitle">Get started in minutes. Works with plain HTML, React apps, Node.js scripts, and more.</p>
+
+      <div class="code-examples-grid">
+
+        <!-- Example 1: Browser UMD -->
+        <div class="code-example">
+          <div class="code-example-header">
+            <h3>Browser (UMD) &mdash; Full Pivot Table</h3>
+            <span class="tag">HTML</span>
+          </div>
+          <div class="code-example-body">
+            <div class="code-panel">
+<pre><span class="cm">&lt;!-- 1. Include CSS --&gt;</span>
+<span class="tag-hl">&lt;link</span> rel=<span class="str">"stylesheet"</span>
+  href=<span class="str">"node_modules/orb-pivot/dist/orb.css"</span> <span class="tag-hl">/&gt;</span>
+
+<span class="cm">&lt;!-- 2. Include React 18 --&gt;</span>
+<span class="tag-hl">&lt;script</span> src=<span class="str">"unpkg.com/react@18/umd/react.min.js"</span><span class="tag-hl">&gt;&lt;/script&gt;</span>
+<span class="tag-hl">&lt;script</span> src=<span class="str">"unpkg.com/react-dom@18/umd/react-dom.min.js"</span><span class="tag-hl">&gt;&lt;/script&gt;</span>
+
+<span class="cm">&lt;!-- 3. Include orb-pivot --&gt;</span>
+<span class="tag-hl">&lt;script</span> src=<span class="str">"node_modules/orb-pivot/dist/orb.min.js"</span><span class="tag-hl">&gt;&lt;/script&gt;</span>
+
+<span class="tag-hl">&lt;div</span> id=<span class="str">"pivot"</span><span class="tag-hl">&gt;&lt;/div&gt;</span>
+
+<span class="tag-hl">&lt;script&gt;</span>
+  <span class="kw">var</span> widget = <span class="kw">new</span> orb.<span class="fn">pgridwidget</span>({
+    <span class="fn">dataSource</span>: [
+      [<span class="str">'US'</span>, <span class="str">'Laptops'</span>, <span class="num">120</span>, <span class="num">89999</span>],
+      [<span class="str">'US'</span>, <span class="str">'Phones'</span>,  <span class="num">200</span>, <span class="num">159800</span>],
+      [<span class="str">'UK'</span>, <span class="str">'Laptops'</span>,  <span class="num">90</span>, <span class="num">67499</span>],
+      [<span class="str">'UK'</span>, <span class="str">'Phones'</span>,  <span class="num">180</span>, <span class="num">143820</span>]
+    ],
+    <span class="fn">fields</span>: [
+      { name: <span class="str">'0'</span>, caption: <span class="str">'Country'</span> },
+      { name: <span class="str">'1'</span>, caption: <span class="str">'Product'</span> },
+      { name: <span class="str">'2'</span>, caption: <span class="str">'Qty'</span> },
+      { name: <span class="str">'3'</span>, caption: <span class="str">'Revenue'</span>,
+        dataSettings: { aggregateFunc: <span class="str">'sum'</span> } }
+    ],
+    <span class="fn">rows</span>: [<span class="str">'Country'</span>],
+    <span class="fn">columns</span>: [<span class="str">'Product'</span>],
+    <span class="fn">data</span>: [<span class="str">'Qty'</span>, <span class="str">'Revenue'</span>]
+  });
+  widget.<span class="fn">render</span>(document.<span class="fn">getElementById</span>(<span class="str">'pivot'</span>));
+<span class="tag-hl">&lt;/script&gt;</span></pre>
+            </div>
+            <div class="desc-panel">
+              <h4>How it works</h4>
+              <ul>
+                <li>Load the CSS for pivot table styling</li>
+                <li>Include React 18 UMD builds (required peer dependency)</li>
+                <li>Include the orb-pivot UMD bundle</li>
+                <li>Define your data as a 2D array (rows of values)</li>
+                <li>Map array indices to field captions in <code>fields</code></li>
+                <li>Assign fields to <code>rows</code>, <code>columns</code>, and <code>data</code> axes</li>
+                <li>Call <code>render()</code> to mount the interactive pivot table</li>
+              </ul>
+              <h4 style="margin-top:1.25rem">Configuration options</h4>
+              <ul>
+                <li><code>width</code> &mdash; fixed width in pixels</li>
+                <li><code>grandTotal</code> &mdash; show row/column grand totals</li>
+                <li><code>subTotal</code> &mdash; show/collapse sub totals</li>
+                <li><code>dataHeadersLocation</code> &mdash; <code>'rows'</code> or <code>'columns'</code></li>
+                <li><code>theme</code> &mdash; built-in theme name or Bootstrap</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Example 2: ES Module -->
+        <div class="code-example">
+          <div class="code-example-header">
+            <h3>ES Module / Bundler &mdash; Programmatic Query</h3>
+            <span class="tag">JavaScript</span>
+          </div>
+          <div class="code-example-body">
+            <div class="code-panel">
+<pre><span class="kw">import</span> orb <span class="kw">from</span> <span class="str">'orb-pivot'</span>;
+<span class="kw">import</span> <span class="str">'orb-pivot/dist/orb.css'</span>;
+
+<span class="cm">// Create a pivot grid (data only, no UI)</span>
+<span class="kw">const</span> pgrid = <span class="kw">new</span> orb.<span class="fn">pgrid</span>({
+  dataSource: salesData,
+  fields: [
+    { name: <span class="str">'0'</span>, caption: <span class="str">'Country'</span> },
+    { name: <span class="str">'1'</span>, caption: <span class="str">'Product'</span> },
+    { name: <span class="str">'2'</span>, caption: <span class="str">'Revenue'</span>,
+      dataSettings: { aggregateFunc: <span class="str">'sum'</span> } }
+  ],
+  rows: [<span class="str">'Country'</span>],
+  columns: [<span class="str">'Product'</span>],
+  data: [<span class="str">'Revenue'</span>]
+});
+
+<span class="cm">// Fluent query API</span>
+<span class="kw">const</span> q = pgrid.<span class="fn">query</span>();
+
+<span class="cm">// Grand total</span>
+q.<span class="fn">val</span>(<span class="str">'Revenue'</span>);
+<span class="cm">// => { Revenue: 461119.98 }</span>
+
+<span class="cm">// Filter by dimension</span>
+q.<span class="fn">Country</span>(<span class="str">'US'</span>).<span class="fn">val</span>(<span class="str">'Revenue'</span>);
+<span class="cm">// => { Revenue: 249799.99 }</span>
+
+<span class="cm">// Multiple fields</span>
+q.<span class="fn">Country</span>(<span class="str">'US'</span>).<span class="fn">val</span>(<span class="str">'Revenue'</span>, <span class="str">'Qty'</span>);
+<span class="cm">// => { Revenue: 249799.99, Qty: 310 }</span>
+
+<span class="cm">// Statistical aggregation</span>
+q.<span class="fn">stdev</span>(<span class="str">'Revenue'</span>);
+q.<span class="fn">avg</span>(<span class="str">'Revenue'</span>);</pre>
+            </div>
+            <div class="desc-panel">
+              <h4>The Query API</h4>
+              <p>Use <code>orb.pgrid</code> to create a pivot grid without rendering any UI. Then call <code>.query()</code> to get a fluent query object.</p>
+              <h4 style="margin-top:1.25rem">Query methods</h4>
+              <ul>
+                <li><code>.FieldName(value)</code> &mdash; filter by a dimension</li>
+                <li><code>.val('Field1', 'Field2')</code> &mdash; get aggregated values</li>
+                <li><code>.avg()</code>, <code>.sum()</code> &mdash; built-in aggregations</li>
+                <li><code>.stdev()</code>, <code>.var()</code> &mdash; statistics</li>
+                <li><code>.min()</code>, <code>.max()</code>, <code>.count()</code></li>
+              </ul>
+              <h4 style="margin-top:1.25rem">Standalone array query</h4>
+              <p>You can also query arrays directly without creating a full pivot grid:</p>
+              <pre style="background:#1e1e3f;color:#e0e0e0;padding:0.75rem;border-radius:6px;font-size:0.8rem;margin-top:0.5rem;font-family:'SF Mono',monospace;overflow-x:auto"><span class="kw">const</span> result = orb.<span class="fn">query</span>(data, fieldDefs)
+  .<span class="fn">Country</span>(<span class="str">'US'</span>)
+  .<span class="fn">Revenue</span>();
+<span class="cm">// => 249799.99</span></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Example 3: Custom formatting & aggregation -->
+        <div class="code-example">
+          <div class="code-example-header">
+            <h3>Custom Formatting and Aggregation</h3>
+            <span class="tag">JavaScript</span>
+          </div>
+          <div class="code-example-body">
+            <div class="code-panel">
+<pre><span class="kw">var</span> config = {
+  dataSource: salesData,
+  fields: [
+    { name: <span class="str">'0'</span>, caption: <span class="str">'Region'</span> },
+    { name: <span class="str">'1'</span>, caption: <span class="str">'Product'</span> },
+    {
+      name: <span class="str">'2'</span>,
+      caption: <span class="str">'Revenue'</span>,
+      dataSettings: {
+        aggregateFunc: <span class="str">'sum'</span>,
+        <span class="cm">// Custom format: currency</span>
+        <span class="fn">formatFunc</span>: <span class="kw">function</span>(val) {
+          <span class="kw">return</span> <span class="str">'$'</span> + Number(val)
+            .<span class="fn">toLocaleString</span>(<span class="str">'en-US'</span>, {
+              minimumFractionDigits: <span class="num">2</span>,
+              maximumFractionDigits: <span class="num">2</span>
+            });
+        }
+      }
+    },
+    {
+      name: <span class="str">'3'</span>,
+      caption: <span class="str">'Count'</span>,
+      dataSettings: {
+        <span class="cm">// Custom aggregation function</span>
+        <span class="fn">aggregateFunc</span>: <span class="kw">function</span>(
+          datafield, intersection, datasource
+        ) {
+          <span class="kw">return</span> intersection.length;
+        }
+      }
+    }
+  ],
+  rows: [<span class="str">'Region'</span>],
+  columns: [<span class="str">'Product'</span>],
+  data: [<span class="str">'Revenue'</span>, <span class="str">'Count'</span>],
+  <span class="cm">// Display options</span>
+  grandTotal: {
+    rowsvisible: <span class="num">true</span>,
+    columnsvisible: <span class="num">true</span>
+  },
+  subTotal: { visible: <span class="num">true</span> },
+  width: <span class="num">800</span>
+};</pre>
+            </div>
+            <div class="desc-panel">
+              <h4>Custom format functions</h4>
+              <p>The <code>formatFunc</code> receives the aggregated value and returns a display string. Use it for currency, percentages, or any formatting.</p>
+              <h4 style="margin-top:1.25rem">Custom aggregation</h4>
+              <p>Replace the built-in aggregation with any function. Your function receives:</p>
+              <ul>
+                <li><code>datafield</code> &mdash; the field definition</li>
+                <li><code>intersection</code> &mdash; array of matching row indices</li>
+                <li><code>datasource</code> &mdash; the full data array</li>
+              </ul>
+              <p style="margin-top:0.75rem">Return any numeric value. Common uses: weighted averages, distinct counts, percentile calculations, custom business metrics.</p>
+              <h4 style="margin-top:1.25rem">Multiple data fields</h4>
+              <p>List multiple fields in <code>data</code> to show them side by side. Each can have its own aggregation and format function.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Query API Steps -->
+  <section id="api" class="demo-section">
+    <div class="container">
+      <h2>Query API in 3 Steps</h2>
+      <p class="section-subtitle">Query aggregated data programmatically without rendering. Great for backends, data pipelines, and analytics.</p>
+      <div class="api-steps">
+        <div class="api-step">
+          <div class="api-step-num">1</div>
+          <h4>Create a Pivot Grid</h4>
+<pre><span class="kw">const</span> orb = <span class="fn">require</span>(<span class="str">'orb-pivot'</span>);
+<span class="kw">const</span> pgrid = <span class="kw">new</span> orb.<span class="fn">pgrid</span>(config);</pre>
+          <p style="margin-top:0.75rem">Initialize with your data source and field definitions. No DOM required.</p>
+        </div>
+        <div class="api-step">
+          <div class="api-step-num">2</div>
+          <h4>Build a Query</h4>
+<pre><span class="kw">const</span> q = pgrid.<span class="fn">query</span>()
+  .<span class="fn">Country</span>(<span class="str">'US'</span>)
+  .<span class="fn">Product</span>(<span class="str">'Laptops'</span>);</pre>
+          <p style="margin-top:0.75rem">Chain dimension filters using the fluent API. Each filter narrows the result set.</p>
+        </div>
+        <div class="api-step">
+          <div class="api-step-num">3</div>
+          <h4>Get Results</h4>
+<pre>q.<span class="fn">val</span>(<span class="str">'Revenue'</span>, <span class="str">'Qty'</span>);
+<span class="cm">// { Revenue: 89999, Qty: 120 }</span>
+
+q.<span class="fn">stdev</span>(<span class="str">'Revenue'</span>);
+<span class="cm">// { Revenue: 1377.58 }</span></pre>
+          <p style="margin-top:0.75rem">Call <code>.val()</code> for default aggregation, or use <code>.avg()</code>, <code>.stdev()</code>, etc.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Aggregation Functions -->
+  <section>
+    <div class="container">
+      <h2>Built-in Aggregation Functions</h2>
+      <p class="section-subtitle">10 built-in functions, plus support for any custom aggregation you need.</p>
+      <div class="agg-grid">
+        <div class="agg-card"><code>sum</code><span>Sum of values (default)</span></div>
+        <div class="agg-card"><code>avg</code><span>Arithmetic mean</span></div>
+        <div class="agg-card"><code>count</code><span>Number of records</span></div>
+        <div class="agg-card"><code>min</code><span>Minimum value</span></div>
+        <div class="agg-card"><code>max</code><span>Maximum value</span></div>
+        <div class="agg-card"><code>prod</code><span>Product of values</span></div>
+        <div class="agg-card"><code>stdev</code><span>Sample std deviation</span></div>
+        <div class="agg-card"><code>stdevp</code><span>Population std deviation</span></div>
+        <div class="agg-card"><code>var</code><span>Sample variance</span></div>
+        <div class="agg-card"><code>varp</code><span>Population variance</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Themes -->
+  <section class="demo-section">
+    <div class="container">
+      <h2>Built-in Themes</h2>
+      <p class="section-subtitle">8 color themes included. Just set <code>theme</code> in your config, or use Bootstrap.</p>
+      <div class="themes-grid">
+        <div class="theme-swatch" style="background:#e74c3c;color:#fff;">Red<span>theme: 'red'</span></div>
+        <div class="theme-swatch" style="background:#3498db;color:#fff;">Blue<span>theme: 'blue'</span></div>
+        <div class="theme-swatch" style="background:#27ae60;color:#fff;">Green<span>theme: 'green'</span></div>
+        <div class="theme-swatch" style="background:#e67e22;color:#fff;">Orange<span>theme: 'orange'</span></div>
+        <div class="theme-swatch" style="background:#e91e8c;color:#fff;">Flower<span>theme: 'flower'</span></div>
+        <div class="theme-swatch" style="background:#7f8c8d;color:#fff;">Gray<span>theme: 'gray'</span></div>
+        <div class="theme-swatch" style="background:#2c3e50;color:#fff;">Black<span>theme: 'black'</span></div>
+        <div class="theme-swatch" style="background:#ecf0f1;color:#333;border:1px solid #ddd;">White<span>theme: 'white'</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contributing -->
+  <section id="contributing" class="contrib-section">
+    <div class="container">
+      <h2>Contributing</h2>
+      <p class="section-subtitle">orb-pivot is open source and welcomes contributions. Here's how to get started.</p>
+      <div class="contrib-grid">
+        <div class="contrib-card">
+          <h3>Development Setup</h3>
+<pre><span class="cm"># Clone the repository</span>
+git clone https://github.com/davidpelayo/orb-pivot.git
+cd orb-pivot
+
+<span class="cm"># Use Node 24 LTS (recommended)</span>
+nvm use
+
+<span class="cm"># Install dependencies</span>
+npm install
+
+<span class="cm"># Start dev server (Vite, port 3000)</span>
+npm run dev
+
+<span class="cm"># Run tests (Jest, 146+ tests)</span>
+npm test
+
+<span class="cm"># Build dist/ (Rollup)</span>
+npm run build</pre>
+        </div>
+        <div class="contrib-card">
+          <h3>Available Scripts</h3>
+<pre><span class="fn">npm run dev</span>         <span class="cm"># Vite dev server</span>
+<span class="fn">npm run build</span>       <span class="cm"># Rollup production build</span>
+<span class="fn">npm test</span>            <span class="cm"># Jest test suite</span>
+<span class="fn">npm run test:watch</span>  <span class="cm"># Jest watch mode</span>
+<span class="fn">npm run test:coverage</span> <span class="cm"># Coverage report</span>
+<span class="fn">npm run lint</span>        <span class="cm"># ESLint 9 flat config</span>
+<span class="fn">npm run lint:fix</span>    <span class="cm"># Auto-fix lint issues</span>
+<span class="fn">npm run format</span>      <span class="cm"># Prettier formatting</span></pre>
+        </div>
+        <div class="contrib-card">
+          <h3>How to Contribute</h3>
+          <ul>
+            <li>Fork the repo and create a feature branch</li>
+            <li>Write tests for new features or bug fixes</li>
+            <li>Ensure <code>npm test</code> and <code>npm run lint</code> pass</li>
+            <li>Submit a pull request with a clear description</li>
+            <li>Follow the existing code style (Prettier enforced)</li>
+          </ul>
+          <h3 style="margin-top:1.5rem">Reporting Issues</h3>
+          <ul>
+            <li>Check existing issues before filing a new one</li>
+            <li>Include a minimal reproduction case</li>
+            <li>Describe expected vs actual behavior</li>
+            <li>Include your Node.js and browser version</li>
+          </ul>
+        </div>
+        <div class="contrib-card">
+          <h3>Project Structure</h3>
+<pre><span class="fn">src/js/</span>           <span class="cm"># Core library</span>
+  <span class="fn">orb.js</span>         <span class="cm"># Main entry point</span>
+  <span class="fn">orb.pgrid.js</span>   <span class="cm"># Pivot grid engine</span>
+  <span class="fn">orb.config.js</span>  <span class="cm"># Configuration</span>
+  <span class="fn">orb.axe.js</span>     <span class="cm"># Axis management</span>
+  <span class="fn">orb.query.js</span>   <span class="cm"># Query API</span>
+  <span class="fn">orb.filtering.js</span> <span class="cm"># Filter expressions</span>
+  react/          <span class="cm"># React components</span>
+<span class="fn">src/css/</span>          <span class="cm"># LESS stylesheets</span>
+<span class="fn">test/spec/</span>        <span class="cm"># Jest test suites</span>
+<span class="fn">dist/</span>             <span class="cm"># Built output</span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Compatibility -->
+  <section>
+    <div class="container">
+      <h2>Compatibility</h2>
+      <p class="section-subtitle">Tested across Node.js versions with GitHub Actions CI.</p>
+      <table class="compat-table">
+        <thead>
+          <tr><th>Environment</th><th>Version</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Node.js</td><td>18</td><td><span class="check">Supported</span></td></tr>
+          <tr><td>Node.js</td><td>20</td><td><span class="check">Supported</span></td></tr>
+          <tr><td>Node.js</td><td>22</td><td><span class="check">Supported</span></td></tr>
+          <tr><td>Node.js</td><td>24 LTS</td><td><span class="star">Recommended</span></td></tr>
+          <tr><td>React</td><td>18.x</td><td><span class="check">Required (peer dep)</span></td></tr>
+          <tr><td>Browsers</td><td>Modern (Chrome, Firefox, Safari, Edge)</td><td><span class="check">Supported</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <h2>Ready to build pivot tables?</h2>
+    <p>Install orb-pivot and start aggregating, slicing, and visualizing your data in minutes.</p>
+    <div class="cta-actions">
+      <a href="https://www.npmjs.com/package/orb-pivot" class="btn btn-primary">Install from npm</a>
+      <a href="https://github.com/davidpelayo/orb-pivot" class="btn btn-outline">Star on GitHub</a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h4>orb-pivot</h4>
+        <p>Interactive pivot grid JavaScript library. Originally forked from <a href="https://github.com/nnajm/orb">nnajm/orb</a>. Modernized and maintained by <a href="https://github.com/davidpelayo">David Pelayo</a>.</p>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="https://github.com/davidpelayo/orb-pivot">GitHub Repository</a></li>
+          <li><a href="https://www.npmjs.com/package/orb-pivot">npm Package</a></li>
+          <li><a href="https://github.com/davidpelayo/orb-pivot/releases">Releases</a></li>
+          <li><a href="https://github.com/davidpelayo/orb-pivot/blob/master/CHANGES.md">Changelog</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Community</h4>
+        <ul>
+          <li><a href="https://github.com/davidpelayo/orb-pivot/issues">Report a Bug</a></li>
+          <li><a href="https://github.com/davidpelayo/orb-pivot/pulls">Pull Requests</a></li>
+          <li><a href="https://github.com/davidpelayo/orb-pivot/blob/master/CONTRIBUTING.md">Contributing Guide</a></li>
+          <li><a href="https://github.com/davidpelayo/orb-pivot/blob/master/LICENSE">MIT License</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Quick Install</h4>
+        <ul>
+          <li><a href="https://www.npmjs.com/package/orb-pivot">npm install orb-pivot</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>orb-pivot v4.0.0 &copy; 2024&ndash;2026 David Pelayo. Released under the MIT License.</p>
+    </div>
+  </footer>
+
+  <!-- Pivot Demo Script -->
+  <script src="dist/orb.js"></script>
   <script>
     var config = {
       dataSource: [
@@ -82,6 +1109,12 @@
 
     var pivotWidget = new orb.pgridwidget(config);
     pivotWidget.render(document.getElementById('pivot-container'));
+
+    // Copy button handler
+    document.querySelector('.copy-btn').addEventListener('click', function() {
+      var btn = this;
+      setTimeout(function() { btn.textContent = 'Copy'; }, 2000);
+    });
   </script>
 </body>
 </html>
